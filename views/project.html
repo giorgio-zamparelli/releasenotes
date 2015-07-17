@@ -1,0 +1,25 @@
+<div ng-controller="ProjectCtrl">
+            
+    <h1>Release notes</h1>
+    <h3 editable-text="release.version">{{ release.version || "version" }}</h3>
+
+    <ul>
+
+        <div ng-repeat="note in release.notes">
+
+            <li>
+                <a editable-select="note.type" e-ng-options="type as type for type in types">{{ note.type || "type" }}</a><br />
+                <a editable-text="note.title" >{{ note.title || "title" }}</a><br />
+                <a editable-text="note.description" >{{ note.description || "description" }}</a><br /><br />
+            </li>
+        </div>
+
+        <li><a ng-click="addNote()">new note</a></li>
+
+    </ul>
+
+    <div id="emailDiv" style="width:100%;border-style:solid;border-width:1px;margin:5px;" ng-include="'views/email.html'" ></div>
+
+    <button id="copyButton" type="button" class="btn btn-success" ng-click="copyToClipboard()">Copy to clipboard</button>
+
+</div>

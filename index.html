@@ -3,147 +3,30 @@
 
     <head>
     
-        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+        <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.css" rel="stylesheet" >
         
         <script src="//cdn.firebase.com/js/client/2.2.7/firebase.js"></script>
 
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.js"></script>
 
-        <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.js"></script>
         
-        <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
+        <script src="bower_components/angular/angular.js"></script>
     
+        <script src="bower_components/angular-route/angular-route.js"></script>
+        
         <link href="bower_components/angular-xeditable/dist/css/xeditable.css" rel="stylesheet">
         <script src="bower_components/angular-xeditable/dist/js/xeditable.js"></script>
-        <script src="bower_components/zeroclipboard/dist/ZeroClipboard.min.js"></script>
+        <script src="bower_components/zeroclipboard/dist/ZeroClipboard.js"></script>
+        
+        <script src="app.js"></script>
+        <script src="controllers/LandingCtrl.js"></script>
+        <script src="controllers/ProjectCtrl.js"></script>
         
     </head>
-    <body ng-controller="ReleaseCtrl">
+    <body >
 
-        <div class"container">
-        
-            <h1>Release notes</h1>
-            <h3 editable-text="release.version">{{ release.version || "version" }}</h3>
-
-            <ul>
-
-                <div ng-repeat="note in release.notes">
-
-                    <li>
-                        <a editable-select="note.type" e-ng-options="type as type for type in types">{{ note.type || "type" }}</a><br />
-                        <a editable-text="note.title" >{{ note.title || "title" }}</a><br />
-                        <a editable-text="note.description" >{{ note.description || "description" }}</a><br /><br />
-                    </li>
-                </div>
-                
-                <li><a ng-click="addNote()">new note</a></li>
-
-            </ul>
-
-            <div id="emailDiv" style="width:100%;border-style:solid;border-width:1px;margin:5px;" ng-include="'views/email.html'" ></div>
-            
-            <button id="copyButton" type="button" class="btn btn-success" ng-click="copyToClipboard()">Copy to clipboard</button>
-            
-        </div>
-        
-        <script>
-        
-            var app = angular.module('app', ["xeditable"]);
-
-            app.run(function(editableOptions) {
-                editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
-            });
-            
-            app.controller('ReleaseCtrl', function ($scope) {
-                
-                $scope.types = ['ADDED', 'CHANGED', 'FIXED'];
-                
-                $scope.release = {
-                
-                    'version' : '0.0.1',
-                    'notes' : [{'type': 'ADDED'}]
-
-                };
-                
-                $scope.$watch('release.notes', function(value, oldValue) {
-                    
-                    var containsAddedNotes = false;
-                    var containsChangedNotes = false;
-                    var containsFixedNotes = false;
-                    
-                    var i = 0;
-                    while (i < $scope.release.notes.length && (!containsAddedNotes || !containsChangedNotes || !containsFixedNotes) ) {
-                        
-                        if ($scope.release.notes[i].type == 'ADDED') {
-                            containsAddedNotes = true;
-                        } else if ($scope.release.notes[i].type == 'CHANGED') {
-                            containsChangedNotes = true;
-                        } else if ($scope.release.notes[i].type == 'FIXED') {
-                            containsFixedNotes = true;
-                        }
-                        
-                        i++;
-                        
-                    };
-                        
-                    
-                    $scope.containsAddedNotes = containsAddedNotes;
-                    $scope.containsChangedNotes = containsChangedNotes;
-                    $scope.containsFixedNotes = containsFixedNotes;
-                    
-                }, true);
-                
-                /*
-                
-                $scope.release = {
-                
-                    'version' : '0.16.0',
-                    'notes' : [
-
-                        {
-                            'type': 'ADDED',
-                            'title': 'Private repository list and detailed view added to web UI',
-                            'description': 'manage your private repositories from Tutum\'s Registry; this includes repositories added to Tutum from other registries (ie. Quay.io or DockerHub).'
-                        },
-                        
-                        {
-                            'type': 'ADDED',
-                            'title': 'Tutum Build',
-                            'description': 'build Docker images from your Github repos on your own infrastructure right from within Tutum. No more unpredictable build times or waiting forever in a queue; you\’re in full control of your own Docker builds.'
-                        },
-                        
-                        {
-                            'type': 'CHANGED',
-                            'title': 'Autorestart',
-                            'description': 'the UI now offers a 1:1 match to the more flexible API implementation. Select from the following options: off, always, on failure.'
-                        }
-
-                    ]
-
-                };
-                
-                */
-                
-                $scope.addNote = function() {
-
-                    $scope.release.notes.push({'type':'ADDED'});
-                    
-                }
-                
-                var client = new ZeroClipboard($("#copyButton"));
-                
-                client.on( "copy", function (event) {
-                    var clipboard = event.clipboardData;
-                    
-                    
-                    clipboard.setData( "text/plain", document.getElementById("emailDiv").innerHTML );
-                    //clipboard.setData( "text/html", "<b>Copy me!</b>" );
-                    //clipboard.setData( "application/rtf", "{\\rtf1\\ansi\n{\\b Copy me!}}" );
-                });
-                
-            });
-        
-        </script>
+        <div ng-view></div>
     
     </body>
 </html>
